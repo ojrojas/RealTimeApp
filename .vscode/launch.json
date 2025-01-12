@@ -1,0 +1,36 @@
+{
+    // Use IntelliSense para saber los atributos posibles.
+    // Mantenga el puntero para ver las descripciones de los existentes atributos.
+    // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Compound",
+            "configurations": [
+                "RealTimeApp",
+                "realtime-web",
+            ]
+        }
+    ],
+    "configurations": [
+        {
+            "name": "realtime-web",
+            "request": "launch",
+            "runtimeArgs": [
+                "start"
+            ],
+            "cwd": "${workspaceFolder}/realtime-web",
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+            "name": "RealTimeApp",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/RealTimeApp/RealTimeApp.csproj"
+        }
+    ]
+}
