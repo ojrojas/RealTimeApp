@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { UserStore } from '../../core/stores/identity.store';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
@@ -18,6 +19,7 @@ import { UserStore } from '../../core/stores/identity.store';
     MatCardModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -35,5 +37,13 @@ export class LoginComponent {
     this.store.login(loginForm.value);
     if (isDevMode())
       console.log(loginForm.value);
+  }
+
+  validationForm = (loginForm: FormGroup): boolean => {
+    console.log("validation", loginForm.valid)
+    if (!loginForm.valid)
+      return true;
+    else
+      return false;
   }
 }

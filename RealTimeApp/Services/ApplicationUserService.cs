@@ -11,9 +11,9 @@ public class ApplicationUserService : IApplicationUserService
     private readonly ITokenService _tokenService;
 
     public ApplicationUserService(
-        UserManager<IdentityUser> userManager, 
-        ILogger<ApplicationUserService> logger, 
-        SignInManager<IdentityUser> signInManager, 
+        UserManager<IdentityUser> userManager,
+        ILogger<ApplicationUserService> logger,
+        SignInManager<IdentityUser> signInManager,
         RoleManager<IdentityRole> roleManager,
         ITokenService tokenService)
     {
@@ -34,7 +34,7 @@ public class ApplicationUserService : IApplicationUserService
 
         if (!result.Succeeded)
         {
-            return Results.BadRequest("Error authenticate user");
+            return Results.Conflict("The username or password is not correct ");
         }
 
         return Results.Ok(await _tokenService.GetTokenAsync(userApplication));
