@@ -1,6 +1,6 @@
 namespace RealTimeApp.Dtos;
 
-public record CreateRequest 
+public record CreateUserRequest 
 {
     public required string Username {get;set;}
     public required string Name {get;set;}

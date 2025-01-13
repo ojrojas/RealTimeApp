@@ -1,7 +1,3 @@
-using RealTimeApp.Apis;
-using RealTimeApp.DI;
-using RealTimeApp.Hubs;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -43,5 +39,6 @@ app.UseAuthorization();
 app.MapHub<ChatHub>("hub-connect");
 
 app.AddAuthorizeEndpoints();
+app.AddChatEndpoints();
 
 app.Run();

@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
 
 namespace RealTimeApp.Hubs;
-
 
 public interface IChatHub
 {
@@ -22,4 +19,21 @@ public class ChatHub : Hub<IChatHub>
     {
         await Clients.Client(userId).SendNotificationAsync(title, message);
     }
+
+    public override Task OnConnectedAsync()
+    {
+        UsersConnected.ConnectedIds.Add(Context.User.Claims.FirstOrDefault().Value);
+        return base.OnConnectedAsync();
+    }
+
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        UsersConnected.ConnectedIds.Remove(Context.User.Claims.FirstOrDefault().Value);
+        return base.OnDisconnectedAsync(exception);
+    }
+}
+
+public static class UsersConnected
+{
+    public static HashSet<string> ConnectedIds = new HashSet<string>();
 }

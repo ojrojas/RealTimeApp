@@ -1,11 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using RealTimeApp.Dtos;
-
 namespace RealTimeApp.Services;
 
 public class TokenService : ITokenService

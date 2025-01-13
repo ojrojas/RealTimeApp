@@ -1,14 +1,15 @@
-import { Component, inject, isDevMode } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-import * as signalR from '@microsoft/signalr';
-import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
-import { UserStore } from '../../core/stores/identity.store';
-import { ChatService } from '../../core/services/chat-service.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ItemChatComponent } from './item-chat/item-chat.component';
+import { HubconnectionService } from '../../core/services/hubconnection.service';
+import { FormMessageComponent } from "./form-message/form-message.component";
+import { ChatStore } from '../../core/stores/chat.store';
+import { ListUsersConnectedComponent } from "./list-users-connected/list-users-connected.component";
 
 
 @Component({
@@ -16,60 +17,27 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   imports: [
     MatFormFieldModule,
     FormsModule,
-     CommonModule,
-        ReactiveFormsModule,
+    CommonModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatDividerModule,
-    MatIconModule],
+    MatFormFieldModule,
+    MatIconModule,
+    ItemChatComponent,
+    FormMessageComponent,
+    ListUsersConnectedComponent
+],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
 })
 export class ChatComponent {
+  readonly hubService = inject(HubconnectionService);
+  readonly chatStore = inject(ChatStore);
 
-  messages='';
-  formChatGroup = new FormGroup({
-    input: new FormControl("", Validators.required)
-  })
-  connection: signalR.HubConnection;
-  store = inject(UserStore);
-  service = inject(ChatService);
+  @Input() id: string | undefined;
 
+  messages = '';
   constructor() {
-    if (isDevMode())
-      console.log("token ", this.store.access_token()?.tokenAccess);
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(environment.api + "/hub-connect", {
-        accessTokenFactory: () => {
-          return `${this.store.access_token()?.tokenAccess!}`
-        },
-        transport: signalR.HttpTransportType.LongPolling
-      })
-      .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Debug).build();
-    this.connection.on("SendMessageAsync", (message) => this.onReceiveMessage(message));
-    this.connection.start().catch(this.logErrors);
+      this.hubService.statusConnetionHub();
   }
-
-  logErrors = (err: string) => {
-    console.error("errors signal", err);
-  }
-
-  onReceiveMessage = (message: string) => {
-    console.log(message);
-    this.messages += "\n" + message;
-  }
-
-  onSendMessage = (message: string | null) => {
-    console.log("Send message -----> ", message);
-    this.connection.invoke("SendMessage", this.connection.connectionId, message).then(res => {
-      let input = document.getElementById("toSend") as HTMLInputElement;
-      input.value = "";
-    });
-  }
-
-  statusConnetionHub = () => {
-    if (isDevMode())
-      console.log("hubbuilder", this.connection);
-  }
-
 }

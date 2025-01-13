@@ -1,0 +1,32 @@
+.chat-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-box {
+  width: 1000px;
+  height: 450px;
+  border: 1px solid blueviolet;
+  border-radius: 15px 15px;
+  box-shadow: 2px 2px 3px;
+  display: grid;
+  grid-template-columns: 8fr 2fr;
+  grid-template-rows: 1fr;
+}
+
+.chat-box-messages {
+  height: 420px;
+  border: 1px solid burlywood;
+  border-radius: 10px 10px 10px;
+  margin: 10px;
+}
+
+.chat-box-users{
+  height: 420px;
+  border: 1px solid rgb(58, 41, 18);
+  border-radius: 10px 10px 10px;
+  margin: 10px;
+  background-color: aqua;
+}

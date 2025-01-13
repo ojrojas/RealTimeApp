@@ -1,22 +1,20 @@
-<main class="main">
+<div class="chat-page">
   <div class="content">
     <h1>Chat Messages</h1>
-    <div style="width: 700px; height: 450px; border:1px solid blueviolet; border-radius: 15px 15px; box-shadow: 2px 2px 3px;">
-      <div style="width: 95%; height: 400px; border: 1px solid burlywood; border-radius: 10px 10px; margin: 20px;">
-          {{messages}}
+    <div class="chat-box">
+      <div class="chat-box-messages">
+        @if(this.chatStore.chats()) {
+        @for(chat of this.chatStore.chats(); track chat.id) {
+        <app-item-chat [chat]="chat" />
+        }
+        }
+      </div>
+      <div class="chat-box-users">
+        <app-list-users-connected />
       </div>
     </div>
-
-    <form class="chatForm" [formGroup]="formChatGroup">
-      <mat-form-field>
-        <mat-label>Leave a comment</mat-label>
-        <input matInput formControlName="input" matInput type="text" name="messageToSend">
-      </mat-form-field>
-      <button mat-raised-button type="button" (click)="onSendMessage(formChatGroup.controls.input.value)">Send Message</button>
-    </form>
-
-
-
-
+    <br>
+    <hr>
+    <app-form-message />
   </div>
-</main>
+</div>

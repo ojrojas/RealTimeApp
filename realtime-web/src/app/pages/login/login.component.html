@@ -4,7 +4,7 @@
       <form [formGroup]="loginForm" (submit)="onSubmit(loginForm)" class="login-form">
         <h2>Log In RealTime Web</h2>
         <div>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="form-login">
             <mat-label>Username</mat-label>
             <input matInput placeholder="Email" formControlName="userName" name="username" required>
             <mat-error>
@@ -13,7 +13,7 @@
           </mat-form-field>
         </div>
         <div>
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="form-login">
             <mat-label>Password</mat-label>
             <input matInput type="password" placeholder="Password" formControlName="password" name="password" required>
             <mat-error>
@@ -22,7 +22,7 @@
           </mat-form-field>
         </div>
         <br />
-        <div>
+        <div class="form-button">
           <button mat-raised-button color="primary" [disabled]="validationForm(loginForm)">Login</button>
         </div>
       </form>

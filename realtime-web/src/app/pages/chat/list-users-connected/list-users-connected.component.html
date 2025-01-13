@@ -1,0 +1,10 @@
+<mat-list class="list-users-content">
+@if(this.userStore.users()?.length! > 0)
+{
+  @for(userl of this.userStore.users(); track userl)
+  {
+  <mat-list-item>{{userl.name.split('@')[0]}}</mat-list-item>
+  <mat-divider></mat-divider>
+  }
+}
+</mat-list>

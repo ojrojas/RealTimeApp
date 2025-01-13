@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-using RealTimeApp.Dtos;
 
 namespace RealTimeApp.Services;
 
@@ -9,18 +7,21 @@ public class ApplicationUserService : IApplicationUserService
     private readonly ILogger<ApplicationUserService> _logger;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly ITokenService _tokenService;
+    private readonly ApplicationDbContext _context;
 
     public ApplicationUserService(
         UserManager<IdentityUser> userManager,
         ILogger<ApplicationUserService> logger,
         SignInManager<IdentityUser> signInManager,
         RoleManager<IdentityRole> roleManager,
-        ITokenService tokenService)
+        ITokenService tokenService,
+        ApplicationDbContext context)
     {
         _userManager = userManager;
         _logger = logger;
         _signInManager = signInManager;
         _tokenService = tokenService;
+        _context = context;
     }
 
     public async ValueTask<IResult> Login(LoginRequest request, CancellationToken cancellationToken)
@@ -40,9 +41,9 @@ public class ApplicationUserService : IApplicationUserService
         return Results.Ok(await _tokenService.GetTokenAsync(userApplication));
     }
 
-    public async ValueTask<IResult> Create(CreateRequest request, CancellationToken cancellationToken)
+    public async ValueTask<IResult> Create(CreateUserRequest request, CancellationToken cancellationToken)
     {
-
+        _logger.LogInformation("Create user request");
         if (!request.Password.Equals(request.PasswordConfirmed))
             return Results.BadRequest();
 
@@ -63,6 +64,7 @@ public class ApplicationUserService : IApplicationUserService
 
     public async ValueTask<IResult> GetUserByIdAsync(string id, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Get user info request");
         UserInfoResponse response = new();
         var user = await _userManager.FindByIdAsync(id);
         response.Email = user.Email;
@@ -70,5 +72,18 @@ public class ApplicationUserService : IApplicationUserService
         response.Name = user.UserName;
 
         return Results.Ok(response);
+    }
+
+    public async ValueTask<IResult> GetUsersConnected(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Get users connected");
+        var users = from user in _context.Users join 
+        uc in UsersConnected.ConnectedIds on user.Id equals uc
+        select new UserInfoResponse { Id = user.Id, Name = user.UserName, Email = user.Email};
+
+        if(!users.Any())
+            return Results.NoContent();
+
+        return Results.Ok(await users.ToListAsync());
     }
 }

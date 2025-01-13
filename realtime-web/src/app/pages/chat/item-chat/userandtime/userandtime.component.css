@@ -1,0 +1,19 @@
+.header-message {
+  height: 35px;
+  background-color: cadetblue;
+}
+
+.image-user{
+  background-image: url('./../../../../assets/person.jpg');
+  background-size: cover;
+  width: 30px;
+  height: 30px;
+}
+
+.user-title {
+  font-size: 14px;
+}
+
+.user-subtile{
+  font-size: 14px;
+}

@@ -1,15 +1,5 @@
 
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using RealTimeApp.Dtos;
-using RealTimeApp.Services;
-
 namespace RealTimeApp.Apis;
-
 
 public static class AuthorizeEndpoints
 {
@@ -22,19 +12,29 @@ public static class AuthorizeEndpoints
         api.MapMethods("/connect/logout", [HttpMethods.Get, HttpMethods.Post], LogoutApplication);
         api.MapPost("/connect/create", Create);
         api.MapGet("/connect/userinfo", GetUserInfo);
+        api.MapGet("/usersconnected", GetUserConnected);
 
         return api;
+    }
+
+    private static async Task<IResult> GetUserConnected(HttpContext context, IApplicationUserService service, CancellationToken cancellationToken)
+    {
+        return await service.GetUsersConnected(cancellationToken);
     }
 
     [Authorize]
     private static async Task<IResult> GetUserInfo(HttpContext context, IApplicationUserService service, CancellationToken cancellationToken)
     {
-        var result = await context.AuthenticateAsync(IdentityConstants.ApplicationScheme);
-        return await service.GetUserByIdAsync(result.Principal.Claims.FirstOrDefault().Value, cancellationToken);
+        var result =  context.User.Claims.FirstOrDefault().Value;
+        return await service.GetUserByIdAsync(result, cancellationToken);
     }
 
     [Authorize]
-    private static async Task<IResult> Create(HttpContext context, IApplicationUserService service, CreateRequest request, CancellationToken cancellationToken)
+    private static async Task<IResult> Create(
+        HttpContext context,
+        IApplicationUserService service,
+        CreateUserRequest request,
+        CancellationToken cancellationToken)
     {
         return await service.Create(request, cancellationToken);
     }

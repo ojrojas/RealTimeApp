@@ -1,11 +1,3 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using RealTimeApp.Data;
-using RealTimeApp.Services;
-
 namespace RealTimeApp.DI;
 
 public static class ApplicationServices
@@ -48,5 +40,6 @@ public static class ApplicationServices
 
         builder.Services.AddTransient<IApplicationUserService, ApplicationUserService>();
         builder.Services.AddTransient<ITokenService, TokenService>();
+        builder.Services.AddTransient<IChatService, ChatService>();
     }
 }

@@ -1,8 +1,24 @@
 .login-page {
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-card {
-  height: 450px;
+  height: 400px;
   width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-login{
+  width: 360px;
+}
+
+.form-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

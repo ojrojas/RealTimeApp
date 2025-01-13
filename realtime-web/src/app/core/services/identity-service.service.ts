@@ -11,11 +11,23 @@ import { Observable } from 'rxjs';
 })
 export class IdentityService {
   readonly http = inject(HttpClient);
+
   constructor() { }
 
-  getUserInfo = (): Observable<HttpResponse<IApplicationUser>> => {
+  getUserInfo = (token:string): Observable<HttpResponse<IApplicationUser>> => {
+
     return this.http.get<IApplicationUser>(
       `${environment.api}/connect/userinfo`, {
+        headers: {["Authorization"]: `Bearer ${token}` },
+      observe: 'response'
+    });
+  }
+
+  getUsersConnected = (token:string): Observable<HttpResponse<IApplicationUser[]>> => {
+
+    return this.http.get<IApplicationUser[]>(
+      `${environment.api}/usersconnected`, {
+        headers: {["Authorization"]: `Bearer ${token}` },
       observe: 'response'
     });
   }

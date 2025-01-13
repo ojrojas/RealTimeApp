@@ -27,11 +27,11 @@ export class LoginComponent {
   loginValid = false;
   formBuilder = inject(FormBuilder);
   store = inject(UserStore);
+
   loginForm = new FormGroup({
     userName: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)
   });
-
 
   onSubmit = (loginForm: FormGroup) => {
     this.store.login(loginForm.value);
