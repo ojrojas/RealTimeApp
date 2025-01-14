@@ -24,8 +24,15 @@ export class ChatService {
       });
   }
 
-  listChat = (id:string): Observable<HttpResponse<IChat[]>> => {
-    return this.http.get<IChat[]>(environment.api.concat(`/chat/${id}`),  {
+  listChatMessages = (id:string): Observable<HttpResponse<IChat>> => {
+    return this.http.get<IChat>(environment.api.concat(`/listchatmessages/${id}`),  {
+      headers: { ["Authorization"]: `Bearer ${this.store.access_token()?.tokenAccess}` },
+      observe: 'response'
+    });
+  }
+
+  listChats = (): Observable<HttpResponse<IChat[]>> => {
+    return this.http.get<IChat[]>(environment.api.concat(`/listchats`),  {
       headers: { ["Authorization"]: `Bearer ${this.store.access_token()?.tokenAccess}` },
       observe: 'response'
     });

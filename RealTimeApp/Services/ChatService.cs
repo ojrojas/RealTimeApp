@@ -23,7 +23,7 @@ public class ChatService : IChatService
         try
         {
             Chat chat = default;
-            var existChat = await _context.Chats.FirstOrDefaultAsync(x => x.Announcer.Equals(announcer) && x.Receiver.Equals(request.Receiver));
+            var existChat = await FindChat(request.Receiver, announcer);
             if (existChat == null)
                 chat = await SaveNewChat(request, announcer, cancellationToken);
 
@@ -49,6 +49,13 @@ public class ChatService : IChatService
         }
     }
 
+    private async Task<Chat> FindChat(Guid receiver, Guid announcer)
+    {
+        return await _context.Chats.FirstOrDefaultAsync(
+            x => x.Announcer.Equals(announcer) && x.Receiver.Equals(receiver)
+            || x.Announcer.Equals(receiver) && x.Receiver.Equals(announcer));
+    }
+
     private async ValueTask<Chat> SaveNewChat(ChatMessageRequest request, Guid announcer, CancellationToken cancellationToken)
     {
         Chat chat = new()
@@ -66,13 +73,16 @@ public class ChatService : IChatService
     public async ValueTask<ListChatMessageResponse> ListChatMessageAsync(Guid userId, Guid receiverId, CancellationToken cancellationToken)
     {
         // next feature pagination chats 
-        _logger.LogInformation($"Get list chats message to user {userId}");
+        _logger.LogInformation($"Get list chats message between userid: {userId} and receiverId: ${receiverId}");
         ListChatMessageResponse response = new();
-        response.Chats = await _context.Chats.Where(
-            x => x.Announcer.Equals(userId) &&
-            x.Receiver.Equals(receiverId)
-            ).ToListAsync();
+        response.Chat = await FindChat(receiverId, userId);
+        response.Chat.Messages = await _context.Messages.Where(x=> x.ChatId.Equals(response.Chat.Id)).ToListAsync();        
 
         return response;
+    }
+
+    public ValueTask<ListChatsResponse> ListChatsAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

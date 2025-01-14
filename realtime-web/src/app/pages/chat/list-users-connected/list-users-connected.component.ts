@@ -5,6 +5,7 @@ import { UserStore } from '../../../core/stores/identity.store';
 import { MatIconModule } from '@angular/material/icon';
 import { IApplicationUser } from '../../../core/models/applicationuser.model';
 import { CommonModule } from '@angular/common';
+import { ChatStore } from '../../../core/stores/chat.store';
 
 @Component({
   selector: 'app-list-users-connected',
@@ -19,10 +20,12 @@ import { CommonModule } from '@angular/common';
 })
 export class ListUsersConnectedComponent {
   userStore = inject(UserStore);
+  readonly chatStore = inject(ChatStore);
   constructor() {
   }
 
   onSelected = (userSelected: IApplicationUser) => {
     this.userStore.setUserSelected(userSelected);
+    this.chatStore.getChats(this.userStore.userSelected()?.id!);
   }
 }

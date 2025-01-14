@@ -7,12 +7,14 @@ import { ChatService } from "../services/chat-service.service";
 import { IChatMessageRequest } from "../dtos/chatmessage.request.dto";
 
 type ChatState = {
+  chat: IChat | null;
   chats: IChat[] | null;
   usersConnected: IApplicationUser | null;
 }
 
 const chatState = signal<ChatState>({
   usersConnected: null,
+  chat: null,
   chats: null
 });
 
@@ -30,14 +32,23 @@ export const ChatStore = signalStore(
         error: (err) => console.error(err)
       })
     },
-    getChats(id:string) {
+    getlistChatMessages(id:string) {
       patchState(store, setPending);
       console.log("request get chats");
-      service.listChat(id).subscribe({
+      service.listChatMessages(id).subscribe({
         next: response => {
-          patchState(store, {chats: response.body as IChat[]}, setFulfilled());
+          patchState(store, {chat: response.body as IChat}, setFulfilled());
         },
         error: (err) => console.error(err)
-      })}
+      })},
+      getlistChats() {
+        patchState(store, setPending);
+        console.log("request get chats");
+        service.listChats().subscribe({
+          next: response => {
+            patchState(store, {chats: response.body as IChat[]}, setFulfilled());
+          },
+          error: (err) => console.error(err)
+        })}
   }))
 );

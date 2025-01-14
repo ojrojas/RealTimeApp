@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace RealTimeApp.Apis;
 
 public static class ChatEndpoints
@@ -8,10 +6,19 @@ public static class ChatEndpoints
     {
         var api = routerBuilder.MapGroup(string.Empty);
 
-        api.MapGet("/chat/{id:guid}", ListChatMessages);
+        api.MapGet("/listchatmessages/{id:guid}", ListChatMessages);
+        api.MapGet("/listchats", ListChats);
+
         api.MapPost("/chat", CreateChatMessage);
 
         return api;
+    }
+
+    [Authorize]
+    private static async Task<IResult> ListChats(HttpContext context, IChatService service, CancellationToken cancellationToken)
+    {
+        var userId = context.User.Claims.FirstOrDefault().Value;
+        return TypedResults.Ok(await service.ListChatsAsync(Guid.Parse(userId), cancellationToken));
     }
 
     [Authorize]
