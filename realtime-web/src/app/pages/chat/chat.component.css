@@ -25,8 +25,7 @@
 
 .chat-box-users{
   height: 420px;
-  border: 1px solid rgb(58, 41, 18);
+  border: 1px solid rgb(165, 125, 64);
   border-radius: 10px 10px 10px;
   margin: 10px;
-  background-color: aqua;
 }

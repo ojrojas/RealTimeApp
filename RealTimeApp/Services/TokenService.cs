@@ -32,7 +32,7 @@ public class TokenService : ITokenService
 
         await Task.CompletedTask;
 
-        var expire =  DateTime.UtcNow.AddDays(7);
+        var expire =  DateTime.UtcNow.AddMinutes(5);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims.ToArray()),

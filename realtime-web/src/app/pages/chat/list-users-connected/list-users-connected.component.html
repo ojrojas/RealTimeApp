@@ -1,10 +1,13 @@
-<mat-list class="list-users-content">
-@if(this.userStore.users()?.length! > 0)
-{
+<mat-selection-list class="list-users-content">
+  @if(this.userStore.users()?.length! > 0)
+  {
   @for(userl of this.userStore.users(); track userl)
   {
-  <mat-list-item>{{userl.name.split('@')[0]}}</mat-list-item>
-  <mat-divider></mat-divider>
+
+  <mat-list-item class="list-users-item" [ngClass]="{'list-users-item-selected': this.userStore.userSelected() === userl}" (click)="onSelected(userl)">
+    <mat-icon matListItemIcon class="list-users-item-icon">person</mat-icon>
+    {{userl.name}} {{userl.lastName}}</mat-list-item>
+  <mat-divider class="list-users-divider"></mat-divider>
   }
-}
-</mat-list>
+  }
+</mat-selection-list>

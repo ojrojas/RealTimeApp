@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { IApplicationUser } from '../models/applicationuser.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { ILoginRequest } from '../dtos/login-request.dto';
+import { ILoginRequest } from '../dtos/login.request.dto';
 import { environment } from '../../../environments/environment';
 import { IAccessToken } from '../models/token.model';
 import { Observable } from 'rxjs';
@@ -32,8 +32,10 @@ export class IdentityService {
     });
   }
 
-  logout = (): Observable<HttpResponse<Object>> => {
-    return this.http.get(`${environment.api}/connect/logout`, { observe: 'response' });
+  logout = (token:string): Observable<HttpResponse<any>> => {
+    return this.http.get(`${environment.api}/connect/logout`, { observe: 'response',
+       headers: {["Authorization"]: `Bearer ${token}` },
+     });
   }
 
   loginApplication(request: ILoginRequest): Observable<HttpResponse<IAccessToken>> {

@@ -1,20 +1,26 @@
-
-
 namespace RealTimeApp.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<IdentityUser, IdentityRole, string>(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole, string>(options)
 {
 
     public DbSet<Chat> Chats { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     /// <summary>
     /// On model creating database, and specific change model
     /// </summary>
-    /// <param name="modelBuilder">Model builder application</param>
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    /// <param name="builder">Model builder application</param>
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(assembly: Assembly.GetExecutingAssembly());
+        builder.Entity<Chat>()
+        .HasMany(m => m.Messages)
+        .WithOne(c => c.Chat)
+        .HasForeignKey(f => f.ChatId)
+        .IsRequired();
+
+
+        base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(assembly: Assembly.GetExecutingAssembly());
     }
 }

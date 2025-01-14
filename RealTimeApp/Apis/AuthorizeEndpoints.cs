@@ -17,7 +17,7 @@ public static class AuthorizeEndpoints
         return api;
     }
 
-    private static async Task<IResult> GetUserConnected(HttpContext context, IApplicationUserService service, CancellationToken cancellationToken)
+    private static async Task<IResult> GetUserConnected(IApplicationUserService service, CancellationToken cancellationToken)
     {
         return await service.GetUsersConnected(cancellationToken);
     }
@@ -25,7 +25,7 @@ public static class AuthorizeEndpoints
     [Authorize]
     private static async Task<IResult> GetUserInfo(HttpContext context, IApplicationUserService service, CancellationToken cancellationToken)
     {
-        var result =  context.User.Claims.FirstOrDefault().Value;
+        var result = context.User.Claims.FirstOrDefault()!.Value;
         return await service.GetUserByIdAsync(result, cancellationToken);
     }
 
@@ -39,15 +39,14 @@ public static class AuthorizeEndpoints
         return await service.Create(request, cancellationToken);
     }
 
+    [Authorize]
     private static async Task<IResult> LogoutApplication(HttpContext context)
     {
-        Results.SignOut();
         await context.SignOutAsync(IdentityConstants.ApplicationScheme);
-        return Results.Redirect("/");
+        return TypedResults.Ok(new { Message = "Disconnected" });
     }
 
     private static async Task<IResult> ConnectToken(
-        HttpContext context,
         IApplicationUserService service,
         LoginRequest request,
         CancellationToken cancellationToken)

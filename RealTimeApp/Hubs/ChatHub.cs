@@ -1,25 +1,47 @@
-
 namespace RealTimeApp.Hubs;
 
 public interface IChatHub
 {
     Task SendMessageAsync(string message);
     Task SendNotificationAsync(string title, string message);
+    Task SendAllNotificationAsync(string title, string message);
+    Task NotificationConnectionUserAsync();
 }
 
 [Authorize]
 public class ChatHub : Hub<IChatHub>
 {
-    public async Task SendMessage(string userId, string message)
+    /// <summary>
+    /// Send Message
+    /// </summary>
+    /// <param name="receiverId">User receiver message</param>
+    /// <param name="message">Message writed</param>
+    public async Task SendMessage(string receiverId, string message)
     {
-        await Clients.Client(userId).SendMessageAsync(message);
+        await Clients.Client(receiverId).SendMessageAsync(message);
     }
 
-    public async Task SendNotification(string userId, string title, string message)
+    /// <summary>
+    /// Send Notification 
+    /// </summary>
+    /// <param name="receiverId">User receiver message</param>
+    /// <param name="title">Title message</param>
+    /// <param name="message">Message writed</param>
+    public async Task SendNotification(string receiverId, string title, string message)
     {
-        await Clients.Client(userId).SendNotificationAsync(title, message);
+        await Clients.Client(receiverId).SendNotificationAsync(title, message);
     }
 
+    public async Task NotificationConnectionUser()
+    {
+        await Clients.All.NotificationConnectionUserAsync();
+    }
+
+    public async Task SendAllNotification(string title, string message)
+    {
+        await Clients.All.SendAllNotificationAsync(title, message);
+    }
+    
     public override Task OnConnectedAsync()
     {
         UsersConnected.ConnectedIds.Add(Context.User.Claims.FirstOrDefault().Value);

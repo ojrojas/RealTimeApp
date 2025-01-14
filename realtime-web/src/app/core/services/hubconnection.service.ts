@@ -2,6 +2,7 @@ import { inject, Injectable, isDevMode, signal } from '@angular/core';
 import { UserStore } from '../stores/identity.store';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../../environments/environment';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ import { environment } from '../../../environments/environment';
 export class HubconnectionService {
   connection: signalR.HubConnection;
   store = inject(UserStore);
+  snakBar = inject(MatSnackBar);
   stateConnection = signal('');
 
   constructor() {
@@ -23,21 +25,32 @@ export class HubconnectionService {
       })
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Debug).build();
-    this.connection.on("SendMessageAsync", (message) => this.onReceiveMessage());
-    this.connection.start().catch(this.logErrors);
+    this.connection.on("SendMessageAsync", (message) => this.onSendMessage(message));
+    this.connection.on("SendNotificationAsync", (title,message) => this.onSendNotification(title, message));
+    this.connection.on("SendAllNotificationAsync", (title, message) => this.onSendAllNotification(title, message));
+    this.connection.on("NotificationConnectionUserAsync", () => this.onNotificationConnectionUser());
+
+    this.connection.start().then(response => {
+      this.store.getUserInfo();
+      this.invokeOnNotificationConnectionUser();
+    }).catch(this.logErrors);
   }
 
   logErrors = (err: string) => {
     console.error("errors signal", err);
   }
 
-  onReceiveMessage = () => {
+  onSendAllNotification = (title:string, message:string) => {
+    this.snakBar.open(message, title, {duration: 5000});
   }
 
-  statusConnetionHub = () => {
-    if (isDevMode())
-      console.log("hubbuilder", this.connection.state === 'Connected');
-    return this.connection.state === 'Connected';
+  onSendNotification = (title:string, message:string) => {
+    this.snakBar.open(message, title, {duration: 5000});
+  }
+
+  onNotificationConnectionUser =() => {
+    this.store.getUsersConnected();
+    this.snakBar.open("New user connected", "Info", {duration: 5000});
   }
 
   onSendMessage = (message: string | null) => {
@@ -47,5 +60,19 @@ export class HubconnectionService {
       let input = document.getElementById("toSend") as HTMLInputElement;
       input.value = "";
     });
+  }
+
+  statusConnetionHub = () => {
+    if (isDevMode())
+      console.log("hubbuilder", this.connection.state === 'Connected');
+    return this.connection.state === 'Connected';
+  }
+
+  invokeOnNotificationConnectionUser = () =>{
+    this.connection.invoke("NotificationConnectionUser");
+  }
+
+  disconnect = () => {
+    this.connection.stop();
   }
 }

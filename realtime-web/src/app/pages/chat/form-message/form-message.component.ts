@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ChatStore } from '../../../core/stores/chat.store';
-import { IChat } from '../../../core/models/chat.model';
 import { UserStore } from '../../../core/stores/identity.store';
 import { IApplicationUser } from '../../../core/models/applicationuser.model';
+import { IChatMessageRequest } from '../../../core/dtos/chatmessage.request.dto';
 
 @Component({
   selector: 'app-form-message',
@@ -26,8 +26,6 @@ import { IApplicationUser } from '../../../core/models/applicationuser.model';
   styleUrl: './form-message.component.css'
 })
 export class FormMessageComponent {
-  @Input() userReceiver : IApplicationUser | undefined;
-
   readonly chatStore = inject(ChatStore);
   readonly userStore = inject(UserStore);
 
@@ -35,27 +33,28 @@ export class FormMessageComponent {
     input: new FormControl("", Validators.required)
   });
 
-  constructor(){
-    this.userStore.getUserInfo();
+  constructor() {
   }
 
   onSendMessage = (message: string | null) => {
-    const chat: IChat = {
-      comunicateType : 1,
-      dateTimeOffset : new Date(),
-      userAnnouncer: this.userStore.user()?.id!,
-      message: message!,
-      nameAnnouncer: this.userReceiver?.name!,
-      receiver: this.userReceiver?.id!,
-      nameReceiver: this.userReceiver?.name!
+    const chat: IChatMessageRequest = {
+        message:message!,
+        receiver: this.userStore.userSelected()?.id!
     };
 
     this.chatStore.createChat(chat);
+    this.chatStore.getChats(this.userStore.userSelected()?.id!);
   }
 
   getDisableButton = () => {
-    if (!this.formChatGroup.valid)
+    console.log("validating message text")
+    if (!this.formChatGroup.valid || this.userStore.userSelected() === undefined)
       return true;
     else return false;
   }
+
+  convertCompleteName = (user: IApplicationUser) => {
+    return user.name + " " + user.lastName;
+  }
+
 }

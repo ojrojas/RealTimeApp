@@ -2,5 +2,6 @@ namespace RealTimeApp.Dtos;
 
 public record ChatMessageRequest
 {
-    public Chat Chat { get; set; }
+    public Guid Receiver { get; set; }
+    public required string Message { get; set; }
 }

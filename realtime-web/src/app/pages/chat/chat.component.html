@@ -1,6 +1,8 @@
 <div class="chat-page">
   <div class="content">
     <h1>Chat Messages</h1>
+    <h3>{{this.userStore.user()?.name}} {{this.userStore.user()?.lastName}}</h3>
+    <a mat-raised-button (click)="onLogout()" target="_blank">Logout</a>
     <div class="chat-box">
       <div class="chat-box-messages">
         @if(this.chatStore.chats()) {
