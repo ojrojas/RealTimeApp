@@ -1,5 +1,3 @@
-using System.Data.Common;
-
 namespace RealTimeApp.Services;
 
 public class ChatService : IChatService
@@ -17,13 +15,13 @@ public class ChatService : IChatService
 
     public async ValueTask<ChatMessageResponse> CreateMessageAsync(ChatMessageRequest request, Guid announcer, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Create new message from user {request.Receiver}");
+        _logger.LogInformation($"Create new message from users {request.Users.Select(x => x.ToString())}");
         ChatMessageResponse response = new();
 
         try
         {
             Chat chat = default;
-            var existChat = await FindChat(request.Receiver, announcer);
+            var existChat = await FindChat(request);
             if (existChat == null)
                 chat = await SaveNewChat(request, announcer, cancellationToken);
 
@@ -32,7 +30,6 @@ public class ChatService : IChatService
                 MessageWrited = request.Message,
                 MessageDate = DateTime.UtcNow,
                 Chat = chat,
-                ComunicateType = ComunicateType.Announcer
             };
 
             await _context.Messages.AddAsync(message, cancellationToken);
@@ -40,7 +37,7 @@ public class ChatService : IChatService
             response.MessageSended = true;
 
             // use hubcontext signalr to notification receiver to update page chats
-            await _hub.Clients.Client(request.Receiver.ToString()).SendMessageAsync(request.Message);
+            await _hub.Clients.Clients(request.Users.Select(x => x.ToString())).SendMessageAsync(request.Message);
             return response;
         }
         catch (Exception ex)
@@ -49,23 +46,22 @@ public class ChatService : IChatService
         }
     }
 
-    private async Task<Chat> FindChat(Guid receiver, Guid announcer)
+    private async Task<Chat> FindChat(ChatMessageRequest request)
     {
-        return await _context.Chats.FirstOrDefaultAsync(
-            x => x.Announcer.Equals(announcer) && x.Receiver.Equals(receiver)
-            || x.Announcer.Equals(receiver) && x.Receiver.Equals(announcer));
+        await Task.CompletedTask;
+        return new Chat {Name = ""};
     }
 
     private async ValueTask<Chat> SaveNewChat(ChatMessageRequest request, Guid announcer, CancellationToken cancellationToken)
     {
         Chat chat = new()
         {
-            Announcer = announcer,
-            Receiver = request.Receiver,
+            Users = [],
+            Name = request.Users.ToString(),
             ChatDate = DateTime.UtcNow
         };
 
-        await _context.Chats.AddAsync(chat);
+        await _context.Chats.AddAsync(chat, cancellationToken);
 
         return chat;
     }
@@ -75,14 +71,19 @@ public class ChatService : IChatService
         // next feature pagination chats 
         _logger.LogInformation($"Get list chats message between userid: {userId} and receiverId: ${receiverId}");
         ListChatMessageResponse response = new();
-        response.Chat = await FindChat(receiverId, userId);
-        response.Chat.Messages = await _context.Messages.Where(x=> x.ChatId.Equals(response.Chat.Id)).ToListAsync();        
+        var chat = await FindChat(new ChatMessageRequest { Users = [userId, receiverId], Message = "" });
+        chat.Messages = await _context.Messages.Where(x => x.ChatId.Equals(chat.Id)).ToListAsync();
+        response.Chat = chat;
 
         return response;
     }
 
-    public ValueTask<ListChatsResponse> ListChatsAsync(Guid userId, CancellationToken cancellationToken)
+    public async ValueTask<ListChatsResponse> ListChatsAsync(Guid userId, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("Get list chats by announcerid");
+        ListChatsResponse response = new();
+        response.Chats = await _context.Chats.Where(x => x.Users.Any(u=> u.Equals(userId))).ToListAsync();
+
+        return response;
     }
 }

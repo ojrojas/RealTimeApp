@@ -11,7 +11,7 @@ using RealTimeApp.Data;
 namespace RealTimeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250113152838_initial")]
+    [Migration("20250115054808_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -226,36 +226,72 @@ namespace RealTimeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ComunicateType")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTimeOffset>("ChatDate")
+                        .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsReadMessage")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Message")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("MessageDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NameAnnouncer")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NameReceiver")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("Receiver")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserAnnouncer")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("RealTimeApp.Models.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<byte[]>("Attachment")
+                        .HasColumnType("BLOB");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsReadMessage")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("MessageDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MessageWrited")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("RealTimeApp.Models.MinimalUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("UsersMinimals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -307,6 +343,35 @@ namespace RealTimeApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RealTimeApp.Models.Message", b =>
+                {
+                    b.HasOne("RealTimeApp.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+                });
+
+            modelBuilder.Entity("RealTimeApp.Models.MinimalUser", b =>
+                {
+                    b.HasOne("RealTimeApp.Models.Chat", "Chat")
+                        .WithMany("Users")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+                });
+
+            modelBuilder.Entity("RealTimeApp.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

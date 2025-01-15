@@ -57,14 +57,8 @@ namespace RealTimeApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserAnnouncer = table.Column<Guid>(type: "TEXT", nullable: false),
-                    NameAnnouncer = table.Column<string>(type: "TEXT", nullable: false),
-                    Receiver = table.Column<Guid>(type: "TEXT", nullable: false),
-                    NameReceiver = table.Column<string>(type: "TEXT", nullable: false),
-                    MessageDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    Message = table.Column<string>(type: "TEXT", nullable: false),
-                    IsReadMessage = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ComunicateType = table.Column<int>(type: "INTEGER", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    ChatDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -177,6 +171,49 @@ namespace RealTimeApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MessageDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    MessageWrited = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    IsReadMessage = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ChatId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Attachment = table.Column<byte[]>(type: "BLOB", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsersMinimals",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    ChatId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersMinimals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UsersMinimals_Chats_ChatId",
+                        column: x => x.ChatId,
+                        principalTable: "Chats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -213,6 +250,16 @@ namespace RealTimeApp.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_ChatId",
+                table: "Messages",
+                column: "ChatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersMinimals_ChatId",
+                table: "UsersMinimals",
+                column: "ChatId");
         }
 
         /// <inheritdoc />
@@ -234,13 +281,19 @@ namespace RealTimeApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "UsersMinimals");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Chats");
         }
     }
 }

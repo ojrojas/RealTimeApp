@@ -44,7 +44,7 @@ export class FormMessageComponent {
       };
 
       this.chatStore.createChat(chat);
-      this.chatStore.getChats(this.userStore.userSelected()?.id!);
+      this.chatStore.getlistChatMessages(this.userStore.userSelected()?.id!);
     } else this.snackBar.open("Error message input not valid");
   }
 

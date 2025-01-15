@@ -223,13 +223,11 @@ namespace RealTimeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("Announcer")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTimeOffset>("ChatDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("Receiver")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -243,11 +241,11 @@ namespace RealTimeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<byte[]>("Attachment")
+                        .HasColumnType("BLOB");
+
                     b.Property<Guid>("ChatId")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("ComunicateType")
-                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsReadMessage")
                         .HasColumnType("INTEGER");
@@ -259,11 +257,38 @@ namespace RealTimeApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("RealTimeApp.Models.MinimalUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ChatId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("UsersMinimals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -328,9 +353,22 @@ namespace RealTimeApp.Migrations
                     b.Navigation("Chat");
                 });
 
+            modelBuilder.Entity("RealTimeApp.Models.MinimalUser", b =>
+                {
+                    b.HasOne("RealTimeApp.Models.Chat", "Chat")
+                        .WithMany("Users")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+                });
+
             modelBuilder.Entity("RealTimeApp.Models.Chat", b =>
                 {
                     b.Navigation("Messages");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

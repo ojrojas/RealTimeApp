@@ -23,3 +23,6 @@ global using Microsoft.Extensions.Options;
 global using RealTimeApp.Apis;
 global using RealTimeApp.DI;
 global using Microsoft.AspNetCore.Http.HttpResults;
+
+global using System.Text.Json.Serialization;
+global using Microsoft.AspNetCore.Http.Json;

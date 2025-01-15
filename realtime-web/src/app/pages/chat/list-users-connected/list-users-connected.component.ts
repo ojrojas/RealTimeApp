@@ -26,6 +26,6 @@ export class ListUsersConnectedComponent {
 
   onSelected = (userSelected: IApplicationUser) => {
     this.userStore.setUserSelected(userSelected);
-    this.chatStore.getChats(this.userStore.userSelected()?.id!);
+    this.chatStore.getlistChatMessages(this.userStore.userSelected()?.id!);
   }
 }
