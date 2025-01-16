@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ChatStore } from '../../../core/stores/chat.store';
 import { UserStore } from '../../../core/stores/identity.store';
 import { IApplicationUser } from '../../../core/models/applicationuser.model';
-import { IChatMessageRequest } from '../../../core/dtos/chatmessage.request.dto';
+import { IChatMessageRequest } from '../../../core/dtos/chatmessages.request.dto';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 
@@ -39,12 +39,12 @@ export class FormMessageComponent {
   onSendMessage = (message: string | null) => {
     if (this.formChatGroup.valid) {
       const chat: IChatMessageRequest = {
+        chatId: this.chatStore.chat()?.chat.id,
         message: message!,
-        receiver: this.userStore.userSelected()?.id!
+        users: [this.userStore.userSelected()?.id!]
       };
 
       this.chatStore.createChat(chat);
-      this.chatStore.getlistChatMessages(this.userStore.userSelected()?.id!);
     } else this.snackBar.open("Error message input not valid");
   }
 

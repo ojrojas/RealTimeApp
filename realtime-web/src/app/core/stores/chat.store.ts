@@ -4,10 +4,11 @@ import { IChat } from "../models/chat.model";
 import { patchState, signalStore, withMethods, withState } from "@ngrx/signals";
 import { setFulfilled, setPending, withRequestStatus } from "./request-status.store";
 import { ChatService } from "../services/chat-service.service";
-import { IChatMessageRequest } from "../dtos/chatmessage.request.dto";
+import { IChatMessageRequest } from "../dtos/chatmessages.request.dto";
+import { IChatMessagesResponse } from "../dtos/chatmessages.response.dto";
 
 type ChatState = {
-  chat: IChat | null;
+  chat: IChatMessagesResponse | null;
   chats: IChat[] | null;
   usersConnected: IApplicationUser | null;
 }
@@ -32,12 +33,13 @@ export const ChatStore = signalStore(
         error: (err) => console.error(err)
       })
     },
-    getlistChatMessages(id:string) {
+    getlistChatMessages() {
       patchState(store, setPending);
       console.log("request get chats");
-      service.listChatMessages(id).subscribe({
+      service.listChatMessages().subscribe({
         next: response => {
-          patchState(store, {chat: response.body as IChat}, setFulfilled());
+          patchState(store, {chat: response.body as IChatMessagesResponse}, setFulfilled());
+          console.log("chatmessages got it ", response.body);
         },
         error: (err) => console.error(err)
       })},

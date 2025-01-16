@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { ChatComponent } from './pages/chat/chat.component';
 import { authGuard } from './core/auth/auth.guard';
 import { LoginComponent } from './pages/login/login.component';
-import { ItemChatComponent } from './pages/chat/item-chat/item-chat.component';
+import { ItemChatComponent } from './pages/chat/item-chat/item-chat-message.component';
 
 export const routes: Routes = [
   {

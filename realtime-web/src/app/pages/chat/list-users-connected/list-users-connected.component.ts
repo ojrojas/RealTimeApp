@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { IApplicationUser } from '../../../core/models/applicationuser.model';
 import { CommonModule } from '@angular/common';
 import { ChatStore } from '../../../core/stores/chat.store';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-list-users-connected',
@@ -13,7 +14,8 @@ import { ChatStore } from '../../../core/stores/chat.store';
     MatDividerModule,
     MatListModule,
     MatIconModule,
-    CommonModule
+    CommonModule,
+    MatCardModule
   ],
   templateUrl: './list-users-connected.component.html',
   styleUrl: './list-users-connected.component.css'
@@ -21,11 +23,9 @@ import { ChatStore } from '../../../core/stores/chat.store';
 export class ListUsersConnectedComponent {
   userStore = inject(UserStore);
   readonly chatStore = inject(ChatStore);
-  constructor() {
-  }
 
   onSelected = (userSelected: IApplicationUser) => {
     this.userStore.setUserSelected(userSelected);
-    this.chatStore.getlistChatMessages(this.userStore.userSelected()?.id!);
+    this.chatStore.getlistChatMessages();
   }
 }

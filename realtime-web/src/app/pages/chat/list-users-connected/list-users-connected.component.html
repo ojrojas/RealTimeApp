@@ -3,11 +3,10 @@
   {
   @for(userl of this.userStore.users(); track userl)
   {
-
   <mat-list-item class="list-users-item" [ngClass]="{'list-users-item-selected': this.userStore.userSelected() === userl}" (click)="onSelected(userl)">
-    <mat-icon matListItemIcon class="list-users-item-icon">person</mat-icon>
-    {{userl.name}} {{userl.lastName}}</mat-list-item>
-  <mat-divider class="list-users-divider"></mat-divider>
+      <mat-icon matListItemIcon class="list-users-item-icon">person</mat-icon>
+      {{userl.name}} {{userl.lastName}}
+  </mat-list-item>
   }
   }
 </mat-selection-list>

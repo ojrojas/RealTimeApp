@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IMessage } from '../../../../core/models/message.model';
 
 @Component({
   selector: 'app-usermessage',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './usermessage.component.css'
 })
 export class UsermessageComponent {
-  message = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque consectetur animi quis ratione repellendus nisi sit quo ab iure tenetur molestiae ex aspernatur maiores, ipsam illum laudantium consequuntur facere? Omnis!"
+  @Input() message: IMessage | undefined;
 }

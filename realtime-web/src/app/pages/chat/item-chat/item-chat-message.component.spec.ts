@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ItemChatComponent } from './item-chat.component';
+import { ItemChatComponent } from './item-chat-message.component';
 
 describe('ItemChatComponent', () => {
   let component: ItemChatComponent;

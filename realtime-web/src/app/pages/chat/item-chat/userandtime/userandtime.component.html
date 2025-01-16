@@ -1,6 +1,5 @@
 <mat-card-header class="header-message">
   <div mat-card-avatar class="image-user"></div>
-  <mat-card-title class="user-title">{{getNameUserCommunicate(item!) }}</mat-card-title>
-  <mat-card-subtitle class="user-subtile">{{ item?.dateTimeOffset?.toDateString() }} {{
-    item?.dateTimeOffset?.toLocaleTimeString() }}</mat-card-subtitle>
+  <mat-card-title class="user-title">{{message?.nameWriter}}</mat-card-title>
+  <mat-card-subtitle class="user-subtile">{{ message?.messageDate | date: 'dd/MM/yyyy hh:mm' }} </mat-card-subtitle>
 </mat-card-header>

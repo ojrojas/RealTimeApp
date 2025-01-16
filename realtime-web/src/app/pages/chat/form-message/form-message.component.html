@@ -1,9 +1,9 @@
 <form class="chatForm" [formGroup]="formChatGroup">
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" class="form-message">
     <mat-label>write a message</mat-label>
     <input matInput formControlName="input" matInput type="text" name="messageToSend">
   </mat-form-field>
-  <button mat-fab extended type="button" [disabled]="getDisableButton()" (click)="onSendMessage(formChatGroup.controls.input.value)">
+  <button class="form-button" mat-fab extended type="button" [disabled]="getDisableButton()" (click)="onSendMessage(formChatGroup.controls.input.value)">
     <mat-icon>mail</mat-icon>
     Send Message
   </button>

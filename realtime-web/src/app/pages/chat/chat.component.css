@@ -5,27 +5,63 @@
   align-items: center;
 }
 
+.content {
+  width: 90%;
+  height: 99%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header header header"
+    "chat-box chat-box chat-box"
+    "chat-divider chat-divider chat-divider"
+    "chat-form chat-form chat-form";
+}
+
+.chat-header {
+  grid-area: header;
+}
+
+.chat-form {
+  grid-area: chat-form;
+}
+
+.chat-divider {
+  grid-area: chat-divider;
+}
+
+.item-chat {
+  margin: auto;
+}
+
 .chat-box {
-  width: 1000px;
-  height: 450px;
+  width: 100%;
+  height: 600px;
+  padding: 1px;
+  margin: 1px;
   border: 1px solid blueviolet;
   border-radius: 15px 15px;
   box-shadow: 2px 2px 3px;
   display: grid;
-  grid-template-columns: 8fr 2fr;
-  grid-template-rows: 1fr;
+  grid-area: chat-box;
+  grid-template-columns: 2fr 8fr;
+  grid-template-rows: 12fr;
+  grid-template-areas:
+    "chat-box-users chat-box-messages";
 }
 
 .chat-box-messages {
-  height: 420px;
+  height: 95%;
   border: 1px solid burlywood;
   border-radius: 10px 10px 10px;
-  margin: 10px;
+  margin: 1px;
+  grid-area: chat-box-messages;
 }
 
-.chat-box-users{
-  height: 420px;
+.chat-box-users {
+  height: 95%;
   border: 1px solid rgb(165, 125, 64);
   border-radius: 10px 10px 10px;
   margin: 10px;
+  grid-area: chat-box-users;
 }

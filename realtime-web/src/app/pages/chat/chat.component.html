@@ -1,22 +1,25 @@
 <div class="chat-page">
   <div class="content">
-    <h1>Chat Messages</h1>
-    <h3>{{this.userStore.user()?.name}} {{this.userStore.user()?.lastName}}</h3>
-    <a mat-raised-button (click)="onLogout()" target="_blank">Logout</a>
-    <div class="chat-box">
-      <div class="chat-box-messages">
-        @if(this.chatStore.chats()) {
-        @for(chat of this.chatStore.chats(); track chat.id) {
-        <app-item-chat [chat]="chat" />
-        }
-        }
+    <div class="header-chat">
+      <h1>Chat Messages</h1>
+      <div class="header-chat-user">
+        <h3>{{this.userStore.user()?.name}} {{this.userStore.user()?.lastName}}</h3>
+        <a mat-raised-button (click)="onLogout()" target="_blank">Logout</a>
       </div>
+    </div>
+    <div class="chat-box">
       <div class="chat-box-users">
         <app-list-users-connected />
       </div>
+      <div class="chat-box-messages">
+        @for(message of this.chatStore.chat()?.chat?.messages; track message.id) {
+          <div>
+            <app-item-chat class="item-chat" [message]="message" />
+          </div>
+        }
+      </div>
     </div>
-    <br>
-    <hr>
-    <app-form-message />
+    <mat-divider class="chat-divider"></mat-divider>
+    <app-form-message class="chat-form" />
   </div>
 </div>

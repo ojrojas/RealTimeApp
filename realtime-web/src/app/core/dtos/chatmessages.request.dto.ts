@@ -1,4 +1,5 @@
 export interface IChatMessageRequest {
-  receiver:string;
+  chatId?:string;
+  users:string[];
   message:string;
 }

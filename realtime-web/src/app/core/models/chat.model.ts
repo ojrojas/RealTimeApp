@@ -1,16 +1,9 @@
-export interface IChat {
-  id?: string;
-  userAnnouncer: string;
-  nameAnnouncer:string;
-  receiver: string;
-  nameReceiver: string;
-  dateTimeOffset: Date;
-  message: string;
-  isReadMessage?: boolean;
-  comunicateType:number
-}
+import { IMessage } from "./message.model";
 
-export enum ComunicateType {
-  announcer = 1,
-  receiver
+export interface IChat {
+  id: string;
+  name: string;
+  chatDate: Date;
+  users: string[];
+  messages: IMessage[];
 }

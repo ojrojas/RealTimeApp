@@ -11,7 +11,7 @@ using RealTimeApp.Data;
 namespace RealTimeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250115054808_initial")]
+    [Migration("20250115192047_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -233,6 +233,10 @@ namespace RealTimeApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.PrimitiveCollection<string>("Users")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Chats");
@@ -260,7 +264,7 @@ namespace RealTimeApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("WriterUserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -268,30 +272,6 @@ namespace RealTimeApp.Migrations
                     b.HasIndex("ChatId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("RealTimeApp.Models.MinimalUser", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ChatId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChatId");
-
-                    b.ToTable("UsersMinimals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -349,20 +329,7 @@ namespace RealTimeApp.Migrations
                 {
                     b.HasOne("RealTimeApp.Models.Chat", "Chat")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Chat");
-                });
-
-            modelBuilder.Entity("RealTimeApp.Models.MinimalUser", b =>
-                {
-                    b.HasOne("RealTimeApp.Models.Chat", "Chat")
-                        .WithMany("Users")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ChatId");
 
                     b.Navigation("Chat");
                 });
@@ -370,8 +337,6 @@ namespace RealTimeApp.Migrations
             modelBuilder.Entity("RealTimeApp.Models.Chat", b =>
                 {
                     b.Navigation("Messages");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -29,7 +29,7 @@ public static class AuthorizeEndpoints
         return await service.GetUserByIdAsync(result, cancellationToken);
     }
 
-    [Authorize]
+    // [Authorize]
     private static async Task<IResult> Create(
         HttpContext context,
         IApplicationUserService service,

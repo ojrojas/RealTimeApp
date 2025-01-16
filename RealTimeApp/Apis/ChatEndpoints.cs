@@ -6,7 +6,7 @@ public static class ChatEndpoints
     {
         var api = routerBuilder.MapGroup(string.Empty);
 
-        api.MapGet("/listchatmessages/{id:guid}", ListChatMessages);
+        api.MapGet("/listchatmessages", ListChatMessages);
         api.MapGet("/listchats", ListChats);
 
         api.MapPost("/chat", CreateChatMessage);
@@ -35,11 +35,10 @@ public static class ChatEndpoints
     [Authorize]
     private static async ValueTask<Results<Ok<ListChatMessageResponse>, BadRequest<string>, ProblemHttpResult>> ListChatMessages(
         HttpContext context,
-        Guid id,
         IChatService service,
         CancellationToken cancellationToken)
     {
         var userId = context.User.Claims.FirstOrDefault().Value;
-        return TypedResults.Ok(await service.ListChatMessageAsync(Guid.Parse(userId), id, cancellationToken));
+        return TypedResults.Ok(await service.ListChatMessageAsync(Guid.Parse(userId), cancellationToken));
     }
 }
