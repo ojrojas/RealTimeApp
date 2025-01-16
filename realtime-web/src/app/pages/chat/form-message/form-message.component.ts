@@ -45,6 +45,7 @@ export class FormMessageComponent {
       };
 
       this.chatStore.createChat(chat);
+      this.formChatGroup.reset();
     } else this.snackBar.open("Error message input not valid");
   }
 

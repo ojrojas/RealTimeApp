@@ -18,8 +18,23 @@
     "chat-form chat-form chat-form";
 }
 
-.chat-header {
+.header-chat {
   grid-area: header;
+  display:grid;
+  width: 100%;
+  grid-template-columns: 3fr 3fr 3fr;
+  grid-template-areas:
+  "title-chat . chat-user";
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.header-chat-user{
+  grid-area: chat-user;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-content: center;
 }
 
 .chat-form {
@@ -53,9 +68,10 @@
 .chat-box-messages {
   height: 95%;
   border: 1px solid burlywood;
-  border-radius: 10px 10px 10px;
-  margin: 1px;
+  border-radius: 5px 5px 10px;
+  margin: 10px;
   grid-area: chat-box-messages;
+  overflow :auto;
 }
 
 .chat-box-users {
