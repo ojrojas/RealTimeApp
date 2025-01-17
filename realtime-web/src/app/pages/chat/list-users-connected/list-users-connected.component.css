@@ -1,9 +1,6 @@
 .list-users-content{
-
-}
-
-.list-users-divider{
-
+ height: 100%;
+ overflow: auto;
 }
 
 .list-users-item {

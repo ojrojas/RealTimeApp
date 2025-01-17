@@ -39,7 +39,7 @@ export class FormMessageComponent {
   onSendMessage = (message: string | null) => {
     if (this.formChatGroup.valid) {
       const chat: IChatMessageRequest = {
-        chatId: this.chatStore.chat()?.chat.id,
+        chatId: this.chatStore.chatMessageResponse()?.chat.id,
         message: message!,
         users: [this.userStore.userSelected()?.id!]
       };

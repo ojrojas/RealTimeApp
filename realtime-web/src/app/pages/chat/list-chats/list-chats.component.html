@@ -1,0 +1,13 @@
+<mat-selection-list class="list-chats-content">
+  @if(this.chatStore.chats()?.chats)
+  {
+  @for(chat of this.chatStore.chats()?.chats; track chat)
+  {
+  <mat-list-item class="list-chats-item"
+    [ngClass]="{'list-chats-item-selected': this.chatStore.chatSelected() === chat}" (click)="onSelected(chat)">
+    <mat-icon matListItemIcon class="list-chats-item-icon">person</mat-icon>
+    {{chat.name}} {{chat.messages[chat.messages.length-1]}}
+  </mat-list-item>
+  }
+  }
+</mat-selection-list>

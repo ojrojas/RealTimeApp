@@ -93,7 +93,7 @@ public class ChatService : IChatService
     {
         _logger.LogInformation("Get list chats by announcerid");
         ListChatsResponse response = new();
-        response.Chats = await _context.Chats.Where(x => x.Users.Any(u => u.Equals(userId))).ToListAsync();
+        response.Chats = await _context.Chats.Where(x => x.Users.Any(u => u.Equals(userId))).Include("Messages").ToListAsync();
 
         return response;
     }

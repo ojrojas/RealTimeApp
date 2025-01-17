@@ -80,4 +80,6 @@
   border-radius: 10px 10px 10px;
   margin: 10px;
   grid-area: chat-box-users;
+  display: grid;
+  grid-template-rows: 6fr 6fr;
 }

@@ -3,15 +3,16 @@ import { UserStore } from '../stores/identity.store';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../../environments/environment';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { ChatStore } from '../stores/chat.store';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HubconnectionService {
-  connection: signalR.HubConnection;
-  store = inject(UserStore);
-  snakBar = inject(MatSnackBar);
-  stateConnection = signal('');
+  readonly connection: signalR.HubConnection;
+  readonly store = inject(UserStore);
+  readonly snakBar = inject(MatSnackBar);
+  readonly chatStore = inject(ChatStore);
 
   constructor() {
     if (isDevMode())
@@ -50,6 +51,7 @@ export class HubconnectionService {
 
   onNotificationConnectionUser =() => {
     this.store.getUsersConnected();
+
     this.snakBar.open("New user connected", "Info", {duration: 5000});
   }
 
@@ -70,6 +72,7 @@ export class HubconnectionService {
 
   invokeOnNotificationConnectionUser = () =>{
     this.connection.invoke("NotificationConnectionUser");
+    this.chatStore.getlistChats();
   }
 
   disconnect = () => {

@@ -10,9 +10,10 @@
     <div class="chat-box">
       <div class="chat-box-users">
         <app-list-users-connected />
+        <app-list-chats />
       </div>
       <div class="chat-box-messages">
-        @for(message of this.chatStore.chat()?.chat?.messages; track message.id) {
+        @for(message of this.chatStore.chatMessageResponse()?.chat?.messages; track message.id) {
           <div>
             <app-item-chat class="item-chat" [message]="message" />
           </div>

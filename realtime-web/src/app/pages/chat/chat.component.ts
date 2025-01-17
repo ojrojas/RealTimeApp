@@ -12,6 +12,7 @@ import { ChatStore } from '../../core/stores/chat.store';
 import { ListUsersConnectedComponent } from "./list-users-connected/list-users-connected.component";
 import { UserStore } from '../../core/stores/identity.store';
 import { Router } from '@angular/router';
+import { ListChatsComponent } from "./list-chats/list-chats.component";
 
 
 @Component({
@@ -27,8 +28,9 @@ import { Router } from '@angular/router';
     MatIconModule,
     ItemChatComponent,
     FormMessageComponent,
-    ListUsersConnectedComponent
-  ],
+    ListUsersConnectedComponent,
+    ListChatsComponent
+],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css',
 })

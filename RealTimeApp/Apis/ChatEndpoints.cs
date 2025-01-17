@@ -15,7 +15,7 @@ public static class ChatEndpoints
     }
 
     [Authorize]
-    private static async Task<IResult> ListChats(HttpContext context, IChatService service, CancellationToken cancellationToken)
+    private static async Task<Results<Ok<ListChatsResponse>, BadRequest<string>, ProblemHttpResult>> ListChats(HttpContext context, IChatService service, CancellationToken cancellationToken)
     {
         var userId = context.User.Claims.FirstOrDefault().Value;
         return TypedResults.Ok(await service.ListChatsAsync(Guid.Parse(userId), cancellationToken));

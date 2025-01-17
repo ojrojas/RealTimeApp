@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { UserStore } from '../stores/identity.store';
 import { IChatMessageRequest } from '../dtos/chatmessages.request.dto';
 import { IChatMessagesResponse } from '../dtos/chatmessages.response.dto';
+import { IChatsResponse } from '../dtos/chats-response.dtos';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +33,8 @@ export class ChatService {
     });
   }
 
-  listChats = (): Observable<HttpResponse<IChat[]>> => {
-    return this.http.get<IChat[]>(environment.api.concat(`/listchats`),  {
+  listChats = (): Observable<HttpResponse<IChatsResponse>> => {
+    return this.http.get<IChatsResponse>(environment.api.concat(`/listchats`),  {
       headers: { ["Authorization"]: `Bearer ${this.store.access_token()?.tokenAccess}` },
       observe: 'response'
     });
